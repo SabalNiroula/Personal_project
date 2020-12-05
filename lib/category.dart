@@ -39,10 +39,10 @@ class Category extends StatelessWidget {
         assert(units != null),
         super(key: key);
 
-   /// Navigates to the [ConverterRoute].
+  /// Navigates to the [ConverterRoute].
   void navigateToConverter(BuildContext context) {
-    ///When the list is clicked it routes us to the ConverterRoute class 
-    ///When it is clicked all the name,backgroundColor,etc is all stored so on nextPage it is populated with that... 
+    ///When the list is clicked it routes us to the ConverterRoute class
+    ///When it is clicked all the name,backgroundColor,etc is all stored so on nextPage it is populated with that...
     Navigator.of(context).push(MaterialPageRoute<Null>(
       builder: (BuildContext context) {
         return Scaffold(
@@ -55,7 +55,8 @@ class Category extends StatelessWidget {
             centerTitle: true,
             backgroundColor: color,
           ),
-          body: ConverterRoute(///To display the color and the units conversion we need the these parameter so we send them too.
+          body: ConverterRoute(
+            ///To display the color and the units conversion we need the these parameter so we send them too.
             color: color,
             units: units,
           ),
@@ -65,7 +66,7 @@ class Category extends StatelessWidget {
   }
 
   /// Builds a custom widget that shows [Category] information.
-  
+
   /// This information includes the icon, name, and color for the [Category].
   @override
   // This `context` parameter describes the location of this widget in the
