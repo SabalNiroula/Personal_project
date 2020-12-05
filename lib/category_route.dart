@@ -1,4 +1,5 @@
 import 'package:creating_custom_widget/category.dart';
+import 'package:creating_custom_widget/main.dart';
 import 'package:creating_custom_widget/unit.dart';
 import 'package:flutter/material.dart';
 
@@ -11,11 +12,16 @@ final _backgroundColor = Colors.green[100];
 ///
 /// While it is named CategoryRoute, a more apt name would be CategoryScreen,
 /// because it is responsible for the UI at the route's destination.
-class CategoryRoute extends StatelessWidget {
+
+class CategoryRoute extends StatefulWidget {
   const CategoryRoute();
 
+  @override
+  _CategoryRouteState createState() => _CategoryRouteState();
+}
 
-  static const _categoryNames = <String>[
+class _CategoryRouteState extends State<CategoryRoute> {
+  static const categoryNames = <String>[
     'Length',
     'Area',
     'Volume',
@@ -26,7 +32,7 @@ class CategoryRoute extends StatelessWidget {
     'Currency',
   ];
 
-  static const _baseColors = <Color>[
+  static const baseColors = <Color>[
     Colors.teal,
     Colors.orange,
     Colors.pinkAccent,
@@ -48,7 +54,7 @@ class CategoryRoute extends StatelessWidget {
   }
 
   /// Returns a list of mock [Unit]s.
-  List<Unit> _retrieveUnitList(String categoryName) {
+  List<Unit> retrieveUnitList(String categoryName) {
     return List.generate(10, (int i) {
       i += 1;
       return Unit(
@@ -60,21 +66,23 @@ class CategoryRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categories = <Category>[];///creates an array of category
-    ///Here it adds all the name to the category like name, SplashColor,Icon,etc..
-    for (var i = 0; i < _categoryNames.length; i++) {
-      categories.add(Category(
-        name: _categoryNames[i],
-        color: _baseColors[i],
-        iconLocation: (Icons.cake),
-        units: _retrieveUnitList(_categoryNames[i]),
-      ));///Makes to Category function which is in category.dart while adding
+    final categories = <Category>[];
+
+    for (int i = 0; i < categoryNames.length; i++) {
+      categories.add(new Category(
+          name: categoryNames[i],
+          color: baseColors[i],
+          iconLocation: Icons.cake,
+          units: retrieveUnitList(categoryName)
+          ));
     }
 
     final listView = Container(
       color: _backgroundColor,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: buildCategoryWidgets(categories,),
+      child: buildCategoryWidgets(
+        categories,
+      ),
     );
 
     final appBar = AppBar(
