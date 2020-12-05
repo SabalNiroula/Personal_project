@@ -25,6 +25,7 @@ class ConverterRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     // Here is just a placeholder for a list of mock units
     final unitWidgets = units.map((Unit unit) {
+      ///The UI of how the color,Text,textSize,etc.. be is made from here 
       return Container(
         color: color,
         margin: EdgeInsets.all(8.0),
@@ -37,14 +38,14 @@ class ConverterRoute extends StatelessWidget {
             ),
             Text(
               'Conversion: ${unit.conversion}',
-              style: Theme.of(context).textTheme.subtitle2,
+              style: Theme.of(context).textTheme.subtitle1,
             ),
           ],
         ),
       );
     }).toList();
 
-    return ListView(
+    return ListView(///Finally returning the ListView to populate the screen....
       children: unitWidgets,
     );
   }
