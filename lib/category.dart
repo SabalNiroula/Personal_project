@@ -57,9 +57,14 @@ class Category extends StatelessWidget {
           ),
           body: ConverterRoute(
             ///To display the color and the units conversion we need the these parameter so we send them too.
+            ///sending from here can be used to populate using the color and units
             color: color,
             units: units,
           ),
+
+          /// This prevents the attempt to resize the screen when the keyboard
+          /// is opened
+          resizeToAvoidBottomPadding: false,
         );
       },
     ));
@@ -85,9 +90,7 @@ class Category extends StatelessWidget {
           splashColor: color,
           // We can use either the () => function() or the () { function(); }
           // syntax.
-          onTap: () {
-            navigateToConverter(context);
-          },
+          onTap: () => navigateToConverter(context),
           child: Padding(
             padding: EdgeInsets.all(8.0),
             child: Row(
