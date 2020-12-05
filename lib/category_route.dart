@@ -60,21 +60,21 @@ class CategoryRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categories = <Category>[];
-
+    final categories = <Category>[];///creates an array of category
+    ///Here it adds all the name to the category like name, SplashColor,Icon,etc..
     for (var i = 0; i < _categoryNames.length; i++) {
       categories.add(Category(
         name: _categoryNames[i],
         color: _baseColors[i],
-        iconLocation: Icons.cake,
+        iconLocation: (Icons.cake),
         units: _retrieveUnitList(_categoryNames[i]),
-      ));
+      ));///Makes to Category function which is in category.dart while adding
     }
 
     final listView = Container(
       color: _backgroundColor,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
-      child: buildCategoryWidgets(categories),
+      child: buildCategoryWidgets(categories,),
     );
 
     final appBar = AppBar(
