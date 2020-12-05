@@ -11,7 +11,7 @@ final _rowHeight = 100.0;
 final _borderRadius = BorderRadius.circular(_rowHeight / 2);
 
 /// A custom [Category] widget.
-///
+
 /// The widget is composed on an [Icon] and [Text]. Tapping on the widget shows
 /// a colored [InkWell] animation.
 class Category extends StatelessWidget {
@@ -41,6 +41,8 @@ class Category extends StatelessWidget {
 
    /// Navigates to the [ConverterRoute].
   void navigateToConverter(BuildContext context) {
+    ///When the list is clicked it routes us to the ConverterRoute class 
+    ///When it is clicked all the name,backgroundColor,etc is all stored so on nextPage it is populated with that... 
     Navigator.of(context).push(MaterialPageRoute<Null>(
       builder: (BuildContext context) {
         return Scaffold(
@@ -53,7 +55,7 @@ class Category extends StatelessWidget {
             centerTitle: true,
             backgroundColor: color,
           ),
-          body: ConverterRoute(
+          body: ConverterRoute(///To display the color and the units conversion we need the these parameter so we send them too.
             color: color,
             units: units,
           ),
@@ -63,7 +65,7 @@ class Category extends StatelessWidget {
   }
 
   /// Builds a custom widget that shows [Category] information.
-  ///
+  
   /// This information includes the icon, name, and color for the [Category].
   @override
   // This `context` parameter describes the location of this widget in the
@@ -71,6 +73,7 @@ class Category extends StatelessWidget {
   // Theme ancestor in the tree. Below, we obtain the display1 text theme.
   // See https://docs.flutter.io/flutter/material/Theme-class.html
   Widget build(BuildContext context) {
+    ///The main UI in app comes from here like option like Length,Area,etc...
     return Material(
       color: Colors.transparent,
       child: Container(
