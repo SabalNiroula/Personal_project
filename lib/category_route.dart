@@ -46,6 +46,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
   /// Makes the correct number of rows for the list view.
   ///
   /// For portrait, we use a [ListView].
+  /// builds the listView for the categories which has all the name, color and icons.
   Widget buildCategoryWidgets(List<Widget> categories) {
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) => categories[index],
@@ -55,6 +56,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
 
   /// Returns a list of mock [Unit]s.
   List<Unit> retrieveUnitList(String categoryName) {
+    ///It creates the unitList for converting
     return List.generate(10, (int i) {
       i += 1;
       return Unit(
@@ -68,11 +70,13 @@ class _CategoryRouteState extends State<CategoryRoute> {
   Widget build(BuildContext context) {
     final categories = <Category>[];
 
+///Adds all the names color and icon in the list 
     for (int i = 0; i < categoryNames.length; i++) {
       categories.add(new Category(
           name: categoryNames[i],
           color: baseColors[i],
           iconLocation: Icons.cake,
+          ///creates a 10 unit list 
           units: retrieveUnitList(categoryName)
           ));
     }
@@ -80,6 +84,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     final listView = Container(
       color: _backgroundColor,
       padding: EdgeInsets.symmetric(horizontal: 8.0),
+      ///builds the listview here which populates the entire screen
       child: buildCategoryWidgets(
         categories,
       ),
