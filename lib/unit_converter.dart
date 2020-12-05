@@ -1,23 +1,27 @@
-import 'package:creating_custom_widget/unit.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-const padding = EdgeInsets.all(16.0);
+import 'category.dart';
+import 'unit.dart';
 
-class ConverterRoute extends StatefulWidget {
-  final List<Unit> units;
-  final Color color;
+const _padding = EdgeInsets.all(16.0);
 
-  /// This [ConverterRoute] requires the color and units to not be null.
-  const ConverterRoute({@required this.units, @required this.color})
-      : assert(color != null),
-        assert(units != null);
+/// [UnitConverter] where users can input amounts to convert in one [Unit]
+/// and retrieve the conversion in another [Unit] for a specific [Category].
+class UnitConverter extends StatefulWidget {
+  /// The current [Category] for unit conversion.
+  final Category category;
+
+  /// This [UnitConverter] takes in a [Category] with [Units]. It can't be null.
+  const UnitConverter({
+    @required this.category,
+  }) : assert(category != null);
 
   @override
-  _ConverterRouteState createState() => _ConverterRouteState();
+  _UnitConverterState createState() => _UnitConverterState();
 }
 
-class _ConverterRouteState extends State<ConverterRoute> {
+class _UnitConverterState extends State<UnitConverter> {
   Unit _fromValue;
   Unit _toValue;
   double _inputValue;
@@ -32,10 +36,13 @@ class _ConverterRouteState extends State<ConverterRoute> {
     _setDefaults();
   }
 
+  // TODO: _createDropdownMenuItems() and _setDefaults() should also be called
+  // each time the user switches [Categories].
+
   /// Creates fresh list of [DropdownMenuItem] widgets, given a list of [Unit]s.
   void _createDropdownMenuItems() {
     var newItems = <DropdownMenuItem>[];
-    for (var unit in widget.units) {
+    for (var unit in widget.category.units) {
       newItems.add(DropdownMenuItem(
         value: unit.name,
         child: Container(
@@ -51,10 +58,12 @@ class _ConverterRouteState extends State<ConverterRoute> {
     });
   }
 
+  /// Sets the default values for the 'from' and 'to' [Dropdown]s, and the
+  /// updated output value if a user had previously entered an input.
   void _setDefaults() {
     setState(() {
-      _fromValue = widget.units[0];
-      _toValue = widget.units[1];
+      _fromValue = widget.category.units[0];
+      _toValue = widget.category.units[1];
     });
   }
 
@@ -101,8 +110,8 @@ class _ConverterRouteState extends State<ConverterRoute> {
     });
   }
 
-   Unit _getUnit(String unitName) {
-    return widget.units.firstWhere(
+  Unit _getUnit(String unitName) {
+    return widget.category.units.firstWhere(
       (Unit unit) {
         return unit.name == unitName;
       },
@@ -128,7 +137,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
     }
   }
 
-   Widget _createDropdown(String currentValue, ValueChanged<dynamic> onChanged) {
+  Widget _createDropdown(String currentValue, ValueChanged<dynamic> onChanged) {
     return Container(
       margin: EdgeInsets.only(top: 16.0),
       decoration: BoxDecoration(
@@ -143,8 +152,8 @@ class _ConverterRouteState extends State<ConverterRoute> {
       child: Theme(
         // This sets the color of the [DropdownMenuItem]
         data: Theme.of(context).copyWith(
-          canvasColor: Colors.grey[50],
-        ),
+              canvasColor: Colors.grey[50],
+            ),
         child: DropdownButtonHideUnderline(
           child: ButtonTheme(
             alignedDropdown: true,
@@ -152,7 +161,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
               value: currentValue,
               items: _unitMenuItems,
               onChanged: onChanged,
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headline6,
             ),
           ),
         ),
@@ -162,9 +171,8 @@ class _ConverterRouteState extends State<ConverterRoute> {
 
   @override
   Widget build(BuildContext context) {
-    
     final input = Padding(
-      padding: padding,
+      padding: _padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -191,7 +199,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
       ),
     );
 
-     final arrows = RotatedBox(
+    final arrows = RotatedBox(
       quarterTurns: 1,
       child: Icon(
         Icons.compare_arrows,
@@ -200,7 +208,7 @@ class _ConverterRouteState extends State<ConverterRoute> {
     );
 
     final output = Padding(
-      padding: padding,
+      padding: _padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -230,8 +238,9 @@ class _ConverterRouteState extends State<ConverterRoute> {
         output,
       ],
     );
-   return Padding(
-      padding: padding,
+
+    return Padding(
+      padding: _padding,
       child: converter,
     );
   }
