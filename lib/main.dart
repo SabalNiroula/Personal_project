@@ -1,12 +1,6 @@
 import 'package:creating_custom_widget/category_route.dart';
 import 'package:flutter/material.dart';
 
-// import 'category.dart';
-
-const categoryName = 'Cake';
-const categoryIcon = Icons.cake;
-const categoryColor = Colors.green;
-
 /// The function that is called when main.dart is run.
 void main() {
   runApp(UnitConverterApp());
