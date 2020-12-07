@@ -8,6 +8,7 @@ import 'category.dart';
 import 'category_tile.dart';
 import 'unit.dart';
 import 'unit_converter.dart';
+import 'api.dart';
 
 /// Loads in unit conversion data, and displays the data.
 ///
@@ -17,6 +18,7 @@ import 'unit_converter.dart';
 ///
 /// While it is named CategoryRoute, a more apt name would be CategoryScreen,
 /// because it is responsible for the UI at the route's destination.
+
 class CategoryRoute extends StatefulWidget {
   const CategoryRoute();
 
@@ -31,7 +33,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
   // _categories as we build our app, and when we pass it into a widget's
   // `children` property, we call .toList() on it.
   // For more details, see https://github.com/dart-lang/sdk/issues/27755
- final _categories = <Category>[];
+  final _categories = <Category>[];
   static const _baseColors = <ColorSwatch>[
     ColorSwatch(0xFF6AB7A8, {
       'highlight': Color(0xFF6AB7A8),
@@ -68,7 +70,7 @@ class _CategoryRouteState extends State<CategoryRoute> {
     }),
   ];
 
-static const _icons = <String>[
+  static const _icons = <String>[
     'assets/icons/length.png',
     'assets/icons/area.png',
     'assets/icons/volume.png',
@@ -80,23 +82,23 @@ static const _icons = <String>[
   ];
 
   // wait for our JSON asset to be loaded in (async).
-   @override
-   Future<void> didChangeDependencies() async {
-     super.didChangeDependencies();
-     // We have static unit conversions located in our
-     // assets/data/regular_units.json
-     if (_categories.isEmpty) {
-       await _retrieveLocalCategories();
-     }
-   }
+  @override
+  Future<void> didChangeDependencies() async {
+    super.didChangeDependencies();
+    // We have static unit conversions located in our
+    // assets/data/regular_units.json
+    if (_categories.isEmpty) {
+      await _retrieveLocalCategories();
+      await _retrieveApiCategory();
+    }
+  }
 
   /// Retrieves a list of [Categories] and their [Unit]s
   Future<void> _retrieveLocalCategories() async {
     // Consider omitting the types for local variables. For more details on Effective
     // Dart Usage, see https://www.dartlang.org/guides/language/effective-dart/usage
-    final json = DefaultAssetBundle
-        .of(context)
-        .loadString('assets/regular_units.json');
+    final json =
+        DefaultAssetBundle.of(context).loadString('assets/regular_units.json');
     final data = JsonDecoder().convert(await json);
     if (data is! Map) {
       throw ('Data retrieved from API is not a Map');
@@ -122,6 +124,37 @@ static const _icons = <String>[
     });
   }
 
+  /// Retrieves a [Category] and its [Unit]s from an API on the web
+    Future<void> _retrieveApiCategory() async {
+    // Add a placeholder while we fetch the Currency category using the API
+    setState(() {
+      _categories.add(Category(
+        name: apiCategory['name'],
+        units: [],
+        color: _baseColors.last,
+        iconLocation: _icons.last,
+      ));
+    });
+    final api = Api();
+    final jsonUnits = await api.getUnits(apiCategory['route']);
+    // If the API errors out or we have no internet connection, this category
+    // remains in placeholder mode (disabled)
+    if (jsonUnits != null) {
+      final units = <Unit>[];
+      for (var unit in jsonUnits) {
+        units.add(Unit.fromJson(unit));
+      }
+      setState(() {
+        _categories.removeLast();
+        _categories.add(Category(
+          name: apiCategory['name'],
+          units: units,
+          color: _baseColors.last,
+          iconLocation: _icons.last,
+        ));
+      });
+    }
+  }
 
   /// Function to call when a [Category] is tapped.
   void _onCategoryTap(Category category) {
@@ -138,9 +171,13 @@ static const _icons = <String>[
     if (deviceOrientation == Orientation.portrait) {
       return ListView.builder(
         itemBuilder: (BuildContext context, int index) {
+           var _category = _categories[index];
           return CategoryTile(
-            category: _categories[index],
-            onTap: _onCategoryTap,
+            category: _category,
+            onTap:
+                _category.name == apiCategory['name'] && _category.units.isEmpty
+                    ? null
+                    : _onCategoryTap,
           );
         },
         itemCount: _categories.length,
@@ -158,7 +195,6 @@ static const _icons = <String>[
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
